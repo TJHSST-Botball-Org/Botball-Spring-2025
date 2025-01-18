@@ -1,4 +1,21 @@
 # ninja log v6
-1	13	1737234686646110372	/home/devin/Code/Botball-Spring-2025/RobotCal_Devin/build/CMakeFiles/cmake.verify_globs	a86afe94a82f57c3
-13	463	1737234686656109606	CMakeFiles/main.dir/src/main.cpp.o	1c3fc5558dd72b56
-463	550	1737234687106075086	main	84d98cafc6d7756c
+0	17	1737235448885743687	/home/devin/Code/Botball-Spring-2025/RobotCal_Devin/build/CMakeFiles/cmake.verify_globs	a86afe94a82f57c3
+18	462	1737235448902409675	CMakeFiles/main.dir/src/main.cpp.o	1c3fc5558dd72b56
+462	528	1737235449345724874	main	84d98cafc6d7756c
+1	16	1737235852669301791	/home/devin/Code/Botball-Spring-2025/RobotCal_Devin/build/CMakeFiles/cmake.verify_globs	a86afe94a82f57c3
+2	19	1737235871119453388	/home/devin/Code/Botball-Spring-2025/RobotCal_Devin/build/CMakeFiles/cmake.verify_globs	a86afe94a82f57c3
+1	18	1737235886452869021	/home/devin/Code/Botball-Spring-2025/RobotCal_Devin/build/CMakeFiles/cmake.verify_globs	a86afe94a82f57c3
+1	14	1737235901292913261	/home/devin/Code/Botball-Spring-2025/RobotCal_Devin/build/CMakeFiles/cmake.verify_globs	a86afe94a82f57c3
+14	462	1737235901306246618	CMakeFiles/main.dir/src/main.cpp.o	1c3fc5558dd72b56
+462	535	1737235901752914099	main	84d98cafc6d7756c
+1	14	1737236198908821685	/home/devin/Code/Botball-Spring-2025/RobotCal_Devin/build/CMakeFiles/cmake.verify_globs	a86afe94a82f57c3
+2	14	1737236249940854655	/home/devin/Code/Botball-Spring-2025/RobotCal_Devin/build/CMakeFiles/cmake.verify_globs	a86afe94a82f57c3
+14	469	1737236249954187635	CMakeFiles/main.dir/src/main.cpp.o	1c3fc5558dd72b56
+469	536	1737236250410842182	main	84d98cafc6d7756c
+1	16	1737236302426080230	/home/devin/Code/Botball-Spring-2025/RobotCal_Devin/build/CMakeFiles/cmake.verify_globs	a86afe94a82f57c3
+17	639	1737236302442746425	CMakeFiles/main.dir/src/main.cpp.o	1c3fc5558dd72b56
+639	705	1737236303066062096	main	84d98cafc6d7756c
+1	16	1737236615313695104	/home/devin/Code/Botball-Spring-2025/RobotCal_Devin/build/CMakeFiles/cmake.verify_globs	a86afe94a82f57c3
+2	19	1737236623221595746	/home/devin/Code/Botball-Spring-2025/RobotCal_Devin/build/CMakeFiles/cmake.verify_globs	a86afe94a82f57c3
+20	484	1737236623238264969	CMakeFiles/main.dir/src/main.cpp.o	1c3fc5558dd72b56
+484	580	1737236623701669371	main	84d98cafc6d7756c

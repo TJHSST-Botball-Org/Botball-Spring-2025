@@ -1,4 +1,5 @@
 #include <iostream>
+#include <kipr/wombat.hpp>
 
 int main()
 {
