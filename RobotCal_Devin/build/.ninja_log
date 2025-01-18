@@ -1,0 +1,4 @@
+# ninja log v6
+1	13	1737234686646110372	/home/devin/Code/Botball-Spring-2025/RobotCal_Devin/build/CMakeFiles/cmake.verify_globs	a86afe94a82f57c3
+13	463	1737234686656109606	CMakeFiles/main.dir/src/main.cpp.o	1c3fc5558dd72b56
+463	550	1737234687106075086	main	84d98cafc6d7756c
