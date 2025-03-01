@@ -19,6 +19,9 @@ private:
 
     static constexpr double RIGHT_WHEEL_CONSTANT = 0.5;
 
+    static constexpr int L_SENSOR_ANALOG_PIN = -1;
+    static constexpr int R_SENSOR_ANALOF_PIN = -1;
+
 public:
     Robot();
 
@@ -32,4 +35,8 @@ public:
 
     void openClaw_Entree();
     void closeClaw_Entree();
+
+
+    void righttSensor();
+    void leftSensor();
 };
