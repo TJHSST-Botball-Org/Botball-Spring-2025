@@ -1,0 +1,44 @@
+#include <kipr/wombat.h>
+
+int main() {
+    int right = 0;   // Right motor port
+    int left = 3;    // Left motor port
+    int inches = 20;  // Distance to the wall in inches
+
+    // Reset motor position counters
+    cmpc(right);
+    cmpc(left);
+
+    // Move forward until both buttons are pressed
+    while ((get_digital_value(0) == 0) && (get_digital_value(9) == 0)) {
+        move_at_velocity(right, 500);
+        move_at_velocity(left, 437);
+    }
+
+    // Stop the motors
+    move_at_velocity(right, 0);
+    move_at_velocity(left, 0);
+
+    // Get the number of ticks moved
+    int right_ticks = gmpc(right);
+    int left_ticks = gmpc(left);
+
+    // Calculate the new TICKS_PER_INCH values
+    double RIGHT_TICKS_PER_INCH = (double)right_ticks / inches;
+    double LEFT_TICKS_PER_INCH = (double)left_ticks / inches;
+
+    // Print results
+    printf("Right motor ticks: %d\n", right_ticks);
+    printf("Left motor ticks: %d\n", left_ticks);
+    printf("New RIGHT_TICKS_PER_INCH: %f\n", RIGHT_TICKS_PER_INCH);
+    printf("New LEFT_TICKS_PER_INCH: %f\n", LEFT_TICKS_PER_INCH);
+
+return 0;
+    
+    //DATA
+    // R = 227.6  L = 227.8
+    // 230.4.   230.0
+    // 233.2.   232.8
+    // 224.8, 224.4
+    
+}
