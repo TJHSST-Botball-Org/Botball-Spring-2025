@@ -1,0 +1,14 @@
+[
+{
+  "directory": "/home/devin/Code/Botball-Spring-2025/Bibi/build",
+  "command": "/usr/bin/g++ -I/home/devin/Code/Botball-Spring-2025/Bibi/include -g -o CMakeFiles/main.dir/src/main.cpp.o -c /home/devin/Code/Botball-Spring-2025/Bibi/src/main.cpp",
+  "file": "/home/devin/Code/Botball-Spring-2025/Bibi/src/main.cpp",
+  "output": "CMakeFiles/main.dir/src/main.cpp.o"
+},
+{
+  "directory": "/home/devin/Code/Botball-Spring-2025/Bibi/build",
+  "command": "/usr/bin/g++ -I/home/devin/Code/Botball-Spring-2025/Bibi/include -g -o CMakeFiles/main.dir/src/Robot.cpp.o -c /home/devin/Code/Botball-Spring-2025/Bibi/src/Robot.cpp",
+  "file": "/home/devin/Code/Botball-Spring-2025/Bibi/src/Robot.cpp",
+  "output": "CMakeFiles/main.dir/src/Robot.cpp.o"
+}
+]
