@@ -3,8 +3,8 @@
 
 const int ARM_PORT = 3;
 const int CLAW_PORT = 1;
-const int RAISED_POSITION = 0; //FIX THE NUMBER
-const int LOWERED_POSITION = 1800; //FIX THE NUMBER
+const int RAISED_POSITION = 1600; //FIX THE NUMBER
+const int LOWERED_POSITION = 30; //FIX THE NUMBER
 const int CLOSED_POSITION = 135; //FIX THE NUMBER
 const int OPEN_POSITION = 1170; //FIX THE NUMBER
 const int LEFT_MOTOR_PIN = 3;
@@ -16,7 +16,7 @@ const double RIGHT_TICKS_PER_INCH = 241;
 
 void raise_arm()
 {
-    for(int servoPos = get_servo_position(ARM_PORT); servoPos>RAISED_POSITION; servoPos--){
+    for(int servoPos = get_servo_position(ARM_PORT); servoPos<RAISED_POSITION; servoPos++){
         set_servo_position(ARM_PORT, servoPos);
         msleep(1);
     }
@@ -24,7 +24,7 @@ void raise_arm()
 
 void lower_arm()
 {
-    for(int servoPos = get_servo_position(ARM_PORT); servoPos<LOWERED_POSITION; servoPos++){
+    for(int servoPos = get_servo_position(ARM_PORT); servoPos>LOWERED_POSITION; servoPos--){
         set_servo_position(ARM_PORT, servoPos);
         msleep(1);
     }
@@ -50,7 +50,7 @@ void p(std::string output)
 void wait_for_button()
 {
     std::cout << "Waiting for button." << std::endl;
-    while (!get_digital_value(4))
+    while (!get_digital_value(0))
     {
         msleep(1);
     }
@@ -102,8 +102,8 @@ void turn_around_right_wheel(double degrees, int wait_offset_ms=0)
     */
     double distance = 2*PI*6.5*(degrees/360);
     double mult = distance/abs(distance);
-    move_at_velocity(LEFT_MOTOR_PIN, mult*5*LEFT_TICKS_PER_INCH);
-    msleep(abs(distance/5*1000)+wait_offset_ms);
+    move_at_velocity(LEFT_MOTOR_PIN, mult*LEFT_TICKS_PER_INCH);
+    msleep(abs(distance*1000)+wait_offset_ms);
     stop();
 }
 
@@ -118,32 +118,41 @@ void rotate_continuous(double speed, int direction)
 
 int main()
 {
+   // turn_around_right_wheel(90, 0);
+   // move_linear(5,50,0);
+    //return 0;
     enable_servos();
     raise_arm();
     close_claw();
     
+
     // Slide 3
     p("Slide 3");
     raise_arm();
-    turn_around_left_wheel(90, 70);
+    turn_around_left_wheel(90, 0);
     
+
     // Slide 4
     p("Slide 4");
-    move_linear(5, -6.4);
+    move_linear(5, -9, 0);
     
-    
+
    	// Slide 5
     p("Slide 5");
-    turn_around_right_wheel(-90, 200);
+    turn_around_left_wheel(-90, 80);
     
-    
+
     // Slide 6
     p("Slide 6");
-    move_linear(5, -7.75);
+    move_linear(5, -14);
     lower_arm();
     
+	// END OF UNIT 1
+    
     open_claw();
-    move_linear(5, 14);
+    move_linear(5, 30);
+    
+    return 0;
     close_claw();
     raise_arm();
     disable_servos();
