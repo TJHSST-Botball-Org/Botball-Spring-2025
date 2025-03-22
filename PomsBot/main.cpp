@@ -158,9 +158,134 @@ int main()
     // Slide 6
     wait_for_button();
     p("Slide 6");
-    move_linear(5, -14);
-    lower_arm();    
+    move_linear(5, -14);    
     
+    /*
+    ██    ██ ███    ██ ██ ████████     ██████  
+    ██    ██ ████   ██ ██    ██             ██ 
+    ██    ██ ██ ██  ██ ██    ██         █████  
+    ██    ██ ██  ██ ██ ██    ██        ██      
+     ██████  ██   ████ ██    ██        ███████ 
+                                           
+    */
+
+    return 0;
+
+    // Slide 8
+    p("Slide 8");
+    open_claw();
+    lower_arm();
+
+    // Slide 9
+    p("Slide 9");
+    
+
+    
+
+
+    /*
+    UNIT 3 
+
+    GETTING THE VERTICAL POMS
+    
+    */
+
+    // Slide 16
+    p("Slide 16");
+    raise_arm();
+    
+    //Slide 17
+    p("Slide 17");
+    move_linear(5, 11);
+
+    //Slide 18
+    p("Slide 18");
+    turn_around_left_wheel(90, 100);
+
+    //Slide 19
+    p("Slide 19");
+    open_claw();
+    lower_arm();
+    
+    //Slide 20
+    p("Slide 20");
+    move_linear(5, X); //FIX THE NUMBER
+
+    //Slide 21
+    p("Slide 21");
+    turn_around_left_wheel(90, 0);
+    
+    //Slide 22
+    p("Slide 22");
+    close_claw();
+    
+    //Slide 23
+    p("Slide 23");
+    turn_around_left_wheel(-90, 0);
+
+    //Slide 24
+    p("Slide 24");
+    move_linear(5, X); //FIX THE NUMBER
+
+    //Slide 25
+    p("Slide 25");
+    turn_around_left_wheel(90, 0);
+
+    //Slide 26
+    p("Slide 26");
+    move_linear(5, X); //FIX THE NUMBER
+    lower_arm();
+    
+    //Slide 27
+    p("Slide 27");
+    open_claw();
+
+    /*
+    UNIT 4 
+
+    GETTING POMPOM SET 3
+    
+    */
+    //Slide 30
+    p("Slide 30");
+    raise_arm();
+
+    //Slide 31
+    p("Slide 31");
+    move_linear(x);
+
+    //Slide 32
+    p("Slide 32");
+    turn_around_left_wheel(-90, 0);
+
+    //SLide 33
+    p("Slide 33");
+    open_claw();
+    lower_arm();
+    // Slide 34
+    p("Slide 34");
+    move_linear(x);
+    
+    // Slide 35
+    p("Slide 35");
+    close_claw();
+
+    // Slide 36
+    p("Slide 36");
+    move_linear(-x);
+    
+    //Slide 37 
+    turn_around_left_wheel(90, 0);
+            
+    // Slide 38
+    p("Slide 38");
+    move_linear(x);
+    lower_arm();
+
+
+    // Slide 39
+    p("Slide 39");
+    open_claw();
     
     // Getting poms code
     cmpc(0);
