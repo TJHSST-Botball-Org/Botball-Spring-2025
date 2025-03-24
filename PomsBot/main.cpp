@@ -3,17 +3,17 @@
 
 const int ARM_PORT = 3;
 const int CLAW_PORT = 1;
-const int RAISED_POSITION = 1600; //FIX THE NUMBER
-const int HALF_LOWERED = 230;
-const int LOWERED_POSITION = 5; //FIX THE NUMBER
+const int RAISED_POSITION = 1800; //FIX THE NUMBER
+const int HALF_LOWERED = 377;
+const int LOWERED_POSITION = 120; //FIX THE NUMBER
 const int CLOSED_POSITION = 1123; //FIX THE NUMBER
 const int OPEN_POSITION = 2047; //FIX THE NUMBER
 const int LEFT_MOTOR_PIN = 3;
 const int RIGHT_MOTOR_PIN = 0;
 const double PI = 3.141592654;
 
-const double LEFT_TICKS_PER_INCH = 208;
-const double RIGHT_TICKS_PER_INCH = 228;
+const double LEFT_TICKS_PER_INCH = 200;
+const double RIGHT_TICKS_PER_INCH = 230;
 
 void raise_arm()
 {
@@ -112,8 +112,8 @@ void turn_around_right_wheel(double degrees, int wait_offset_ms=0)
     */
     double distance = 2*PI*6.5*(degrees/360);
     double mult = distance/abs(distance);
-    move_at_velocity(LEFT_MOTOR_PIN, mult*LEFT_TICKS_PER_INCH);
-    msleep(abs(distance*1000)+wait_offset_ms);
+    move_at_velocity(LEFT_MOTOR_PIN, 5*mult*LEFT_TICKS_PER_INCH);
+    msleep(abs(distance/5*1000)+wait_offset_ms);
     stop();
 }
 
@@ -136,29 +136,29 @@ int main()
     close_claw();
     
 	
-    wait_for_button();
+    //wait_for_button();
     // Slide 3
     p("Slide 3");
     raise_arm();
-    turn_around_left_wheel(90, 200);
+    turn_around_left_wheel(90, 75);
     
 
     // Slide 4
-    wait_for_button();
+    //wait_for_button();
     p("Slide 4");
-    move_linear(5, -17, 0);
+    move_linear(5, -17, 150);
     
 
    	// Slide 5
-    wait_for_button();
+    //wait_for_button();
     p("Slide 5");
-    turn_around_left_wheel(-90, 180);
+    turn_around_left_wheel(-90, 75);
     
 
     // Slide 6
-    wait_for_button();
+    //wait_for_button();
     p("Slide 6");
-    move_linear(5, -14);    
+    move_linear(5, -14, 200);    
     
     /*
     ██    ██ ███    ██ ██ ████████     ██████  
@@ -169,16 +169,41 @@ int main()
                                            
     */
 
-    return 0;
-
-    // Slide 8
+   // Slide 8
     p("Slide 8");
     open_claw();
     lower_arm();
 
+    //wait_for_button();
     // Slide 9
     p("Slide 9");
+    move_linear(5, 23, 0);
+
+    //wait_for_button();
+    // Slide 10
+    p("Slide 10");
+    close_claw();
+    raise_arm();
     
+    //wait_for_button();
+    // Slide 11
+    p("Slide 11");
+    move_linear(5, 9, 0);
+    
+    //wait_for_button();
+    // Slide 12
+    p("Slide 12");
+    turn_around_right_wheel(90, 60);
+    
+    
+    // Slide 13
+	p("Slide 13");
+    move_linear(5, 5, 0);
+    
+    // Slide 14
+    p("Slide 14");
+    half_lower_arm();
+    open_claw();
 
     
 
