@@ -3,11 +3,12 @@
 
 const int ARM_PORT = 3;
 const int CLAW_PORT = 1;
-const int RAISED_POSITION = 1800; //FIX THE NUMBER
-const int HALF_LOWERED = 377;
+const int RAISED_POSITION = 1220; //FIX THE NUMBER
+const int FULLY_RAISED = 1800; 
+const int HALF_LOWERED = 487;
 const int LOWERED_POSITION = 120; //FIX THE NUMBER
-const int CLOSED_POSITION = 1123; //FIX THE NUMBER
-const int OPEN_POSITION = 2047; //FIX THE NUMBER
+const int CLOSED_POSITION = 280; //FIX THE NUMBER
+const int OPEN_POSITION = 1931; //FIX THE NUMBER
 const int LEFT_MOTOR_PIN = 3;
 const int RIGHT_MOTOR_PIN = 0;
 const double PI = 3.141592654;
@@ -126,16 +127,23 @@ void rotate_continuous(double speed, int direction)
     move_at_velocity(RIGHT_MOTOR_PIN, -direction*speed*RIGHT_TICKS_PER_INCH);
 }
 
+void fully_raise_arm()
+{
+    for(int servoPos = get_servo_position(ARM_PORT); servoPos<FULLY_RAISED; servoPos++){
+        set_servo_position(ARM_PORT, servoPos);
+        msleep(1);
+    }
+}
+
 int main()
 {
     // turn_around_right_wheel(90, 0);
    // move_linear(5,50,0);
     //return 0;
-    enable_servos();
-    raise_arm();
-    close_claw();
-    
+    enable_servos();    
 	
+    
+    
     //wait_for_button();
     // Slide 3
     p("Slide 3");
@@ -158,17 +166,19 @@ int main()
     // Slide 6
     //wait_for_button();
     p("Slide 6");
-    move_linear(5, -14, 200);    
+    move_linear(5, -14, 0);    
     
     /*
-    ██    ██ ███    ██ ██ ████████     ██████  
-    ██    ██ ████   ██ ██    ██             ██ 
-    ██    ██ ██ ██  ██ ██    ██         █████  
-    ██    ██ ██  ██ ██ ██    ██        ██      
-     ██████  ██   ████ ██    ██        ███████ 
+    bb    bb bbb    bb bb bbbbbbbb     bbbbbb  
+    bb    bb bbbb   bb bb    bb             bb 
+    bb    bb bb bb  bb bb    bb         bbbbb  
+    bb    bb bb  bb bb bb    bb        bb      
+     bbbbbb  bb   bbbb bb    bb        bbbbbbb 
                                            
     */
 
+    
+    
    // Slide 8
     p("Slide 8");
     open_claw();
@@ -177,7 +187,7 @@ int main()
     //wait_for_button();
     // Slide 9
     p("Slide 9");
-    move_linear(5, 23, 0);
+    move_linear(5, 24, 0);
 
     //wait_for_button();
     // Slide 10
@@ -204,33 +214,136 @@ int main()
     p("Slide 14");
     half_lower_arm();
     open_claw();
+    
+      //Slide 17
+    p("Slide 17");
+    raise_arm();
+    close_claw();
 
     
+    
+    
+    
+    
+    //Slide 18
+    p("Slide 18");
+    move_linear(5, -6);
 
+    //Slide 19
+    p("Slide 19");
+    turn_around_right_wheel(-90);
+    move_linear(5,-3);
+    
+    //Slide 20
+    p("Slide 20");
+    move_linear(5, 3.4); // old comment: FIX THIS NUMBER
+    
 
+    //Slide 21
+    p("Slide 21");
+    open_claw();
+    lower_arm();
+    
+    //Slide 22
+    p("Slide 22");
+    turn_around_right_wheel(-30);
+    
+    //Slide 23
+    p("Slide 23");
+    move_linear(5, 3.3);
+
+    //Slide 24
+    p("Slide 24");
+    turn_around_right_wheel(-30);
+    //move_linear(5, X); //FIX THE NUMBER
+    
+    move_linear(5, -1.5);
+
+    //Slide 25
+    p("Slide 25");
+    close_claw();
+    raise_arm();
+
+    //Slide 26
+    p("Slide 26");
+    turn_around_right_wheel(60);
+    move_linear(5,3);
+    turn_around_right_wheel(90, -50);
+    
+    //Slide 27
+    p("Slide 27");
+    move_linear(5, 5);
+
+    //Slide 28
+    p("Slide 28");
+    half_lower_arm();
+    open_claw();
+    
+    
+    
+    
+    
     /*
-    UNIT 3 
-
-    GETTING THE VERTICAL POMS
     
-    */
-
+   	// UNIT 3 
+    
+    wait_for_button();
     // Slide 16
     p("Slide 16");
     raise_arm();
     
+    wait_for_button();
     //Slide 17
     p("Slide 17");
-    move_linear(5, 11);
-
+    move_linear(5, -6.5);
+	
+    wait_for_button();
     //Slide 18
     p("Slide 18");
-    turn_around_left_wheel(90, 100);
-
+    turn_around_right_wheel(-90, 100);
+	    
+    wait_for_button();
     //Slide 19
     p("Slide 19");
-    open_claw();
+    move_linear(5, -3);
+    
+    wait_for_button();
+    // Slide 20
+    p("Slide 20");
     lower_arm();
+    close_claw();
+    
+    wait_for_button();
+    // Slide 21
+    p("Slide 21");
+    raise_arm();
+    
+    wait_for_button();
+    // Slide 22
+    p("Slide 22");
+    move_linear(5, 13.75, 0);
+    
+    wait_for_button();
+    // Slide 23
+    p("Slide 23");
+    turn_around_right_wheel(-90, 0);
+    
+    
+    
+    return 0;
+    
+    wait_for_button();
+    // Slide 20
+    p("Slide 20");
+    lower_arm();
+    
+    wait_for_button();
+    // Slide 21
+    p("Slide 21");
+    
+    return 0;
+    
+    /*
     
     //Slide 20
     p("Slide 20");
@@ -264,67 +377,7 @@ int main()
     //Slide 27
     p("Slide 27");
     open_claw();
-
-    /*
-    UNIT 4 
-
-    GETTING POMPOM SET 3
     
-    */
-    //Slide 30
-    p("Slide 30");
-    raise_arm();
-
-    //Slide 31
-    p("Slide 31");
-    move_linear(x);
-
-    //Slide 32
-    p("Slide 32");
-    turn_around_left_wheel(-90, 0);
-
-    //SLide 33
-    p("Slide 33");
-    open_claw();
-    lower_arm();
-    // Slide 34
-    p("Slide 34");
-    move_linear(x);
+*/
     
-    // Slide 35
-    p("Slide 35");
-    close_claw();
-
-    // Slide 36
-    p("Slide 36");
-    move_linear(-x);
-    
-    //Slide 37 
-    turn_around_left_wheel(90, 0);
-            
-    // Slide 38
-    p("Slide 38");
-    move_linear(x);
-    lower_arm();
-
-
-    // Slide 39
-    p("Slide 39");
-    open_claw();
-    
-    // Getting poms code
-    cmpc(0);
-    cmpc(3);
-    enable_servos();
-    open_claw();
-    lower_arm();
-    move_linear(5,33);
-    move_linear(5,-1.5);
-    close_claw();
-    raise_arm();
-    move_linear(5,16);
-    //turn_around_left_wheel(5,0);
-    move_linear(5,10);
-    turn_around_left_wheel(90, 200);
-    move_linear(5,6);
 }
