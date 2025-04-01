@@ -39,6 +39,67 @@ int main()
     robot.move_linear(6.25, -10);
     robot.openClaw_Entree();
 
+    // moves back
+    robot.move_linear(6.25, 10);
+    robot.turn_around_left_wheel(90);
+    robot.move_linear(6.25, -55);
+    robot.move_linear(6.25, 10);
+    robot.turn_around_left_wheel(90);
+    robot.move_linear(6.25, -19);
+
+    // grabs taco
+    robot.closeClaw_Entree();
+    robot.move_linear(6.25, 29);
+    robot.turn_around_left_wheel(90.0);
+    robot.move_linear(6.25, -53);
+    robot.turn_around_left_wheel(90.0);
+    robot.move_linear(6.25, -10);
+    robot.openClaw_Entree();
+
+    // move to water bottles
+    robot.move_linear(6.25, 10);
+    robot.turn_around_left_wheel(90);
+    robot.move_linear(6.25, 20);
+    robot.turn_around_right_wheel(90);
+    robot.move_linear(6.25, 10);
+    robot.openClaw_Bottle();
+    robot.unfold_bottle_arm();
+    robot.closeClaw_Bottle();
+    robot.set_bottle_arm(1300);
+    robot.turn_around_left_wheel(90);
+    robot.move_linear(6.25, 10);
+    robot.turn_around_left_wheel(90);
+    robot.move_linear(6.25, 15);
+    robot.openClaw_Bottle();
+    robot.set_bottle_arm(800);
+    robot.move_linear(6.25, -15);
+    robot.turn_around_left_wheel(90);
+    robot.move_linear(6.25, 8);
+    robot.turn_around_left_wheel(90);
+    robot.unfold_bottle_arm();
+    robot.closeClaw_Bottle();
+    robot.set_bottle_arm(1300);
+    robot.turn_around_left_wheel(90);
+    robot.move_linear(6.25, 8);
+    robot.turn_around_left_wheel(90);
+    robot.move_linear(6.25, 15);
+    robot.openClaw_Bottle();
+    robot.set_bottle_arm(800);
+    robot.move_linear(6.25, -15);
+    robot.turn_around_left_wheel(90);
+    robot.move_linear(6.25, 5);
+    robot.turn_around_left_wheel(90);
+    robot.unfold_bottle_arm();
+    robot.closeClaw_Bottle();
+    robot.set_bottle_arm(1300);
+    robot.turn_around_left_wheel(90);
+    robot.move_linear(6.25, 5);
+    robot.turn_around_left_wheel(90);
+    robot.move_linear(6.25, 15);
+    robot.openClaw_Bottle();
+    robot.turn_around_left_wheel(90);
+    robot.move_linear(6.25, 25);
+
     // robot.move(-10000, 1000);
     // robot.openClaw_Entree();
     // robot.closeClaw_Entree();

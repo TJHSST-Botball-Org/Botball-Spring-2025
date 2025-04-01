@@ -22,12 +22,15 @@ private:
     static constexpr double LEFT_TICKS_PER_INCH = 230;
     static constexpr double RIGHT_TICKS_PER_INCH = 240;
 
+    static constexpr int ENTREE_SWITCH_PIN = 0;
+
     static constexpr double PI = 3.141592654;
 
 public:
     Robot();
 
-    void move_linear(double speed_inch_per_sec, double distance_inch, int wait_offset_ms = 0);
+    void move_linear(double speed_inch_per_sec, double distance_inch, bool stop = 1, int wait_offset_ms = 0);
+    void move_linear_until_switch(bool forward, double speed_inch_per_sec, int wait_offset_ms = 0);
     void turn_around_left_wheel(double degrees, int wait_offset_ms = 0);
     void turn_around_right_wheel(double degrees, int wait_offset_ms = 0);
     void stop();

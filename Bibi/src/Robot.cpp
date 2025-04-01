@@ -14,7 +14,7 @@ void Robot::stop()
     msleep(100);
 }
 
-void Robot::move_linear(double speed_inch_per_sec, double distance_inch, int wait_offset_ms)
+void Robot::move_linear(double speed_inch_per_sec, double distance_inch, bool stopAtEnd, int wait_offset_ms)
 {
     /*
         Moves distance_inch at speed_inch_per_sec. Waits an extra wait_offset_ms milliseconds
@@ -23,11 +23,33 @@ void Robot::move_linear(double speed_inch_per_sec, double distance_inch, int wai
     */
 
     double mult = distance_inch / abs(distance_inch);
-    cout << "Left : " << mult * speed_inch_per_sec * Robot::LEFT_TICKS_PER_INCH << endl;
-    cout << "Right : " << mult * speed_inch_per_sec * Robot::RIGHT_TICKS_PER_INCH << endl;
+    // cout << "Left : " << mult * speed_inch_per_sec * Robot::LEFT_TICKS_PER_INCH << endl;
+    // cout << "Right : " << mult * speed_inch_per_sec * Robot::RIGHT_TICKS_PER_INCH << endl;
     move_at_velocity(Robot::LEFT_WHEEL_PIN, mult * speed_inch_per_sec * Robot::LEFT_TICKS_PER_INCH);
     move_at_velocity(Robot::RIGHT_WHEEL_PIN, mult * speed_inch_per_sec * Robot::RIGHT_TICKS_PER_INCH);
     msleep(abs(distance_inch / speed_inch_per_sec * 1000) + wait_offset_ms);
+    if (stopAtEnd)
+    {
+        stop();
+    }
+}
+
+void Robot::move_linear_until_switch(bool forward, double speed_inch_per_sec, int wait_offset_ms)
+{
+    if (forward)
+    {
+        while (digital(Robot::ENTREE_SWITCH_PIN) == 0)
+        {
+            move_linear(speed_inch_per_sec, 1, 0, wait_offset_ms);
+        }
+    }
+    else
+    {
+        while (digital(Robot::ENTREE_SWITCH_PIN) == 0)
+        {
+            move_linear(speed_inch_per_sec, -1, 0, wait_offset_ms);
+        }
+    }
     stop();
 }
 
