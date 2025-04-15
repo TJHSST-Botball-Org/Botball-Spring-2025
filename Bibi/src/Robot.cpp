@@ -1,131 +1,178 @@
-#include <Robot.h>
 #include <iostream>
+#include <Robot.h>
 
-using namespace std;
+int main()
+{
+    Robot robot;
 
-Robot::Robot()
-{
-}
+    // beginning
+    robot.close_claw_bottle();
+    robot.fold_bottle_arm();
+    robot.openClaw_Entree();
+    msleep(9000);
+    robot.move_linear_until_switch(0, 6.25);
+    robot.move_linear(6.25, 2);
 
-void Robot::stop()
-{
-    move_at_velocity(Robot::LEFT_WHEEL_PIN, 0);
-    move_at_velocity(Robot::RIGHT_WHEEL_PIN, 0);
-    msleep(100);
-}
+    // grabs burger
+    robot.closeClaw_Entree();
+    msleep(7000);
 
-void Robot::move_linear(double speed_inch_per_sec, double distance_inch, bool stopAtEnd, int wait_offset_ms)
-{
-    /*
-        Moves distance_inch at speed_inch_per_sec. Waits an extra wait_offset_ms milliseconds
-        Try to always move at 5 inches per second
-        Backwards is negative distance values. Keep speed positive.
-    */
+    // moves back to black tape
+    robot.move_linear(6.25, 20);
+    robot.turn_around_left_wheel(90);
 
-    double mult = distance_inch / abs(distance_inch);
-    // cout << "Left : " << mult * speed_inch_per_sec * Robot::LEFT_TICKS_PER_INCH << endl;
-    // cout << "Right : " << mult * speed_inch_per_sec * Robot::RIGHT_TICKS_PER_INCH << endl;
-    move_at_velocity(Robot::LEFT_WHEEL_PIN, mult * speed_inch_per_sec * Robot::LEFT_TICKS_PER_INCH);
-    move_at_velocity(Robot::RIGHT_WHEEL_PIN, mult * speed_inch_per_sec * Robot::RIGHT_TICKS_PER_INCH);
-    msleep(abs(distance_inch / speed_inch_per_sec * 1000) + wait_offset_ms);
-    if (stopAtEnd)
-    {
-        stop();
-    }
-}
+    // move across board and turns to drop off burger
+    robot.move_linear(6.25, -38);
+    robot.turn_around_left_wheel(90);
 
-void Robot::move_linear_until_switch(bool forward, double speed_inch_per_sec, int wait_offset_ms)
-{
-    if (forward)
-    {
-        while (digital(Robot::ENTREE_SWITCH_PIN) == 0)
-        {
-            move_linear(speed_inch_per_sec, 1, 0, wait_offset_ms);
-        }
-    }
-    else
-    {
-        while (digital(Robot::ENTREE_SWITCH_PIN) == 0)
-        {
-            move_linear(speed_inch_per_sec, -1, 0, wait_offset_ms);
-        }
-    }
-    stop();
-}
+    // moves back
+    robot.move_linear(6.25, -10);
+    robot.move_linear(6.25, 2);
+    robot.openClaw_Entree();
 
-void Robot::turn_around_left_wheel(double degrees, int wait_offset_ms)
-{
-    /*
-        Rotates 90 degrees at a constant speed.
+    robot.move_linear(6.25, 10);
+    robot.turn_around_left_wheel(90);
+    robot.move_linear(6.25, -50);
+    robot.move_linear(6.25, 10);
+    robot.turn_around_left_wheel(90);
+    robot.move_linear_until_switch(0, 6.25);
+    robot.move_linear(6.25, 2);
 
-        If degrees is positive then clockwise, negative is CCW
-    */
-    degrees *= -1;
-    double distance = 2 * Robot::PI * 11.8 * (degrees / 360);
-    double mult = distance / abs(distance);
-    move_at_velocity(Robot::RIGHT_WHEEL_PIN, mult * 5 * Robot::RIGHT_TICKS_PER_INCH);
-    msleep(abs(distance / 5 * 1000) + wait_offset_ms); // 5 inches per second
-    stop();
-}
-void Robot::turn_around_right_wheel(double degrees, int wait_offset_ms)
-{
-    /*
-        Rotates 90 degrees at a constant speed.
-        If degrees is positive then clockwise, negative is CCW
-    */
-    double distance = 2 * PI * 11.8 * (degrees / 360);
-    double mult = distance / abs(distance);
-    move_at_velocity(Robot::LEFT_WHEEL_PIN, mult * 5 * Robot::LEFT_TICKS_PER_INCH);
-    msleep(abs(distance / 5 * 1000) + wait_offset_ms); // 5 inches per second
-    stop();
-}
+    // grabs hotdog
+    robot.closeClaw_Entree();
+    robot.move_linear(6.25, 20);
+    robot.turn_around_left_wheel(90);
+    robot.move_linear(6.25, -35);
+    robot.turn_around_left_wheel(90);
+    robot.move_linear(6.25, -10);
+    robot.move_linear(6.25, 2);
+    robot.openClaw_Entree();
 
-void Robot::move_bottle_arm(int position, int duration)
-{
-    enable_servo(Robot::BOTTLE_ARM_PIN);
-    set_servo_position(Robot::BOTTLE_ARM_PIN, position);
-    msleep(duration);
-}
+    // Plastic Bottles
+    robot.turn_around_left_wheel(-6);
+    robot.open_claw_bottle();
+    robot.bottle_arm_down();
+    robot.move_linear(6.25, 13);
+    robot.close_claw_bottle();
+    robot.bottle_arm_up();
+    robot.move_linear(6.25, -3);
+    robot.turn_around_left_wheel(90);
+    robot.turn_around_left_wheel(95);
+    robot.move_linear(6.25, -10);
+    robot.move_linear(6.25, 16);
+    robot.bottle_arm_down();
+    robot.open_claw_bottle();
+    robot.bottle_arm_up();
 
-void Robot::openClaw_Bottle()
-{
-    enable_servo(Robot::BOTTLE_CLAW_PIN);
-    set_servo_position(Robot::BOTTLE_CLAW_PIN, Robot::BOTTLE_OPEN_POS);
-    msleep(1000);
-}
+    robot.move_linear(6.25, -5);
+    robot.turn_around_left_wheel(90);
+    robot.move_linear(6.25, 6.5);
+    robot.turn_around_left_wheel(90);
+    robot.bottle_arm_down();
+    robot.move_linear(6.25, 13);
+    robot.close_claw_bottle();
+    robot.bottle_arm_up();
+    robot.move_linear(6.25, -3);
+    robot.turn_around_left_wheel(90);
+    robot.turn_around_left_wheel(90);
+    robot.move_linear(6.25, -10);
+    robot.move_linear(6.25, 16);
+    robot.bottle_arm_down();
+    robot.open_claw_bottle();
+    robot.bottle_arm_up();
 
-void Robot::closeClaw_Bottle()
-{
-    enable_servo(Robot::BOTTLE_CLAW_PIN);
-    set_servo_position(Robot::BOTTLE_CLAW_PIN, Robot::BOTTLE_CLOSED_POS);
-    msleep(1000);
-}
+    robot.move_linear(6.25, -10);
+    robot.turn_around_left_wheel(90);
+    robot.move_linear(6.25, 6.4);
+    robot.turn_around_left_wheel(90);
+    robot.bottle_arm_down();
+    robot.move_linear(6.25, 8);
+    robot.close_claw_bottle();
+    robot.bottle_arm_up();
+    robot.move_linear(6.25, -3);
+    robot.turn_around_left_wheel(90);
+    robot.move_linear(6.25, 4);
+    robot.turn_around_left_wheel(70);
+    robot.move_linear(6.25, 15);
+    robot.open_claw_bottle();
+    robot.fold_bottle_arm();
 
-void Robot::openClaw_Entree()
-{
-    enable_servo(Robot::ENTREE_SERVO_PIN);
-    set_servo_position(Robot::ENTREE_SERVO_PIN, Robot::ENTREE_OPEN_POS);
-    msleep(1000);
-}
+    //---------------------------------
+    // moves back
+    robot.move_linear(6.25, -10);
+    robot.openClaw_Entree();
+    robot.turn_around_left_wheel(-140);
+    robot.move_linear(6.25, -45);
+    robot.move_linear(6.25, 18);
+    robot.turn_around_left_wheel(90);
+    robot.move_linear_until_switch(0, 6.25);
+    robot.move_linear(6.25, 2);
 
-void Robot::closeClaw_Entree()
-{
-    enable_servo(Robot::ENTREE_SERVO_PIN);
-    set_servo_position(Robot::ENTREE_SERVO_PIN, Robot::ENTREE_CLOSED_POS);
-    msleep(1000);
-}
+    // grabs taco
+    robot.closeClaw_Entree();
+    robot.move_linear(6.25, 20);
+    robot.turn_around_left_wheel(90);
+    robot.move_linear(6.25, -40);
+    robot.turn_around_left_wheel(90);
+    robot.move_linear(6.25, -13);
+    robot.move_linear(6.25, 2);
+    robot.openClaw_Entree();
 
-void Robot::set_bottle_arm(int pos)
-{
-    enable_servo(Robot::BOTTLE_ARM_PIN);
-    set_servo_position(Robot::BOTTLE_ARM_PIN, pos);
-    msleep(1000);
-}
-void Robot::fold_bottle_arm()
-{
-    set_bottle_arm(Robot::BOTTLE_ARM_CLOSED_POS);
-}
-void Robot::unfold_bottle_arm()
-{
-    set_bottle_arm(Robot::BOTTLE_ARM_OPEN_POS);
+    // // move to water bottles
+    // robot.move_linear(6.25, 10);
+    // robot.turn_around_left_wheel(90);
+    // robot.move_linear(6.25, 20);
+    // robot.turn_around_right_wheel(90);
+    // robot.move_linear(6.25, 10);
+    // robot.openClaw_Bottle();
+    // robot.unfold_bottle_arm();
+    // robot.closeClaw_Bottle();
+    // robot.set_bottle_arm(1300);
+    // robot.turn_around_left_wheel(92);
+    // robot.move_linear(6.25, 10);
+    // robot.turn_around_left_wheel(92);
+    // robot.move_linear(6.25, 15);
+    // robot.openClaw_Bottle();
+    // robot.set_bottle_arm(800);
+    // robot.move_linear(6.25, -15);
+    // robot.turn_around_left_wheel(92);
+    // robot.move_linear(6.25, 8);
+    // robot.turn_around_left_wheel(92);
+    // robot.unfold_bottle_arm();
+    // robot.closeClaw_Bottle();
+    // robot.set_bottle_arm(1300);
+    // robot.turn_around_left_wheel(92);
+    // robot.move_linear(6.25, 8);
+    // robot.turn_around_left_wheel(92);
+    // robot.move_linear(6.25, 15);
+    // robot.openClaw_Bottle();
+    // robot.set_bottle_arm(800);
+    // robot.move_linear(6.25, -15);
+    // robot.turn_around_left_wheel(92);
+    // robot.move_linear(6.25, 5);
+    // robot.turn_around_left_wheel(92);
+    // robot.unfold_bottle_arm();
+    // robot.closeClaw_Bottle();
+    // robot.set_bottle_arm(1300);
+    // robot.turn_around_left_wheel(92);
+    // robot.move_linear(6.25, 5);
+    // robot.turn_around_left_wheel(92);
+    // robot.move_linear(6.25, 15);
+    // robot.openClaw_Bottle();
+    // robot.turn_around_left_wheel(92);
+    // robot.move_linear(6.25, 25);
+
+    // robot.move(-10000, 1000);
+    // robot.openClaw_Entree();
+    // robot.closeClaw_Entree();
+    // robot.move(-8000, 1000);
+    // robot.rotate(-90, 700);
+    // robot.move(5000, 1000);
+    // robot.rotate(-90, 500);
+    // robot.openClaw_Entree();
+    // robot.rotate(-90, 500);
+    // robot.move(5000, 1000);
+    // robot.rotate(90, 700);
+    // robot.move(8000, 1000);
+    return 0;
 }
