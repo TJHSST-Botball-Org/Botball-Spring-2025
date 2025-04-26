@@ -14,11 +14,11 @@ const int RIGHT_MOTOR_PIN = 0;
 const double PI = 3.141592654;
 
 
-const double LEFT_TICKS_PER_INCH = 206.7;
-const double RIGHT_TICKS_PER_INCH = 256.0;
+const double LEFT_TICKS_PER_INCH = 200.7;
+const double RIGHT_TICKS_PER_INCH = LEFT_TICKS_PER_INCH*1.214;
 
-const double LEFT_TICKS_PER_INCH_BACKWARDS = 256.0;
-const double RIGHT_TICKS_PER_INCH_BACKWARDS = 240.0;
+const double LEFT_TICKS_PER_INCH_BACKWARDS = 237.5;
+const double RIGHT_TICKS_PER_INCH_BACKWARDS = LEFT_TICKS_PER_INCH_BACKWARDS*1.216;
 
 
 const double ARM_DOWN_LEFT_TICKS_PER_INCH = LEFT_TICKS_PER_INCH;
@@ -152,12 +152,12 @@ void turn_around_left_wheel(double degrees, int wait_offset_ms=0)
     if (get_servo_position(ARM_PORT) < 400) 
     {
         // Arm is lowered
-       	msleep(abs(distance/5.45*1000)+TURN_AROUND_LEFT_WHEEL_ARM_LOWERED_OFFSET+wait_offset_ms);
+       	msleep(abs(distance/5.35*1000)+TURN_AROUND_LEFT_WHEEL_ARM_LOWERED_OFFSET+wait_offset_ms);
     }
     else
     {
         // Arm is raised
-       	msleep(abs(distance/5.45*1000)+TURN_AROUND_LEFT_WHEEL_ARM_RAISED_OFFSET+wait_offset_ms);
+       	msleep(abs(distance/5.35*1000)+TURN_AROUND_LEFT_WHEEL_ARM_RAISED_OFFSET+wait_offset_ms);
     }
     
     stop();
@@ -177,12 +177,12 @@ void turn_around_right_wheel(double degrees, int wait_offset_ms=0)
     if (get_servo_position(ARM_PORT) < 400) 
     {
         // Arm is lowered
-       	msleep(abs(distance/5.35*1000)+TURN_AROUND_RIGHT_WHEEL_ARM_LOWERED_OFFSET+wait_offset_ms);
+       	msleep(abs(distance/5.28*1000)+TURN_AROUND_RIGHT_WHEEL_ARM_LOWERED_OFFSET+wait_offset_ms);
     }
     else
     {
         // Arm is raised
-       	msleep(abs(distance/5.35*1000)+TURN_AROUND_RIGHT_WHEEL_ARM_RAISED_OFFSET+wait_offset_ms);
+       	msleep(abs(distance/5.28*1000)+TURN_AROUND_RIGHT_WHEEL_ARM_RAISED_OFFSET+wait_offset_ms);
     }
     stop();
 }
@@ -207,15 +207,12 @@ void fully_raise_arm()
 int main()
 {
 
-    
+    wait_for_light(0);
     shut_down_in(119);
 
 	enable_servos();
  	disable_servo(0);
     
-    
-
-  	
     //Calibration
 	//move_linear(6,30,0);
     //move_linear(6, -30, 0);
@@ -226,13 +223,11 @@ int main()
     p("Slide 3");
     raise_arm();
     turn_around_left_wheel(90, 0);
-   
     
     // Slide 4
     ////wait_for_button()();
     p("Slide 4");
     move_linear(6, -16, 0);
-   
 
    	// Slide 5
     ////wait_for_button()();
@@ -243,7 +238,7 @@ int main()
     // Slide 6
     ////wait_for_button()();
     p("Slide 6");
-    move_linear(6, -12, 0);    
+    move_linear(6, -11.5, 0);    
     
     
     p("Unit 2");
@@ -269,8 +264,7 @@ int main()
     ////wait_for_button()();
     // Slide 9
     p("Slide 9");
-    move_linear(6, 23, 0);
-    move_linear(6, -2, 0);
+    move_linear(6, 21.5, 0);
 
     ////wait_for_button()();
     // Slide 10
@@ -291,7 +285,7 @@ int main()
     
     // Slide 13
 	p("Slide 13");
-    move_linear(6, 3, 0);
+    move_linear(6, 4.5, 0);
     
     // Slide 14
     p("Slide 14");
@@ -310,9 +304,13 @@ int main()
     
     
     
+
+
+
+
+
+
     // UNIT 3 
-    
-   
     //Slide 18
     p("Slide 18");
     move_linear(6, -3);
@@ -325,7 +323,7 @@ int main()
     //wait_for_button()();
     //Slide 20
     p("Slide 20");
-    move_linear(6, 1.5); 
+    move_linear(6, 2.5); 
     //wait_for_button()();
 
     //Slide 21
@@ -341,16 +339,14 @@ int main()
     
     //Slide 23
     p("Slide 23");
-    move_linear(6, 1.5);
+    move_linear(6, 2.3);
 //wait_for_button()();
     //Slide 24
     p("Slide 24");
-    move_linear(6, 3);
     turn_around_right_wheel(-15);
-    move_linear(6, -2);
     //move_linear(6, X); //FIX THE NUMBER
     
-    
+    move_linear(6, 2);
 //wait_for_button()();
     //Slide 25
     p("Slide 25");
@@ -360,27 +356,30 @@ int main()
     
     //Slide 26
     p("Slide 26. Turning towards the tray to drop off the vertical set of poms");
+    turn_around_right_wheel(45);
+    move_linear(6,3.5);
     turn_around_right_wheel(90, 100);
     
     
     //wait_for_button()();
     //Slide 27
     p("Slide 27");
-    move_linear(6, 8); // DROPPING THE VERTICAL SET OF POMS
-    //wait_for_button()();
+    move_linear(6, 9); // DROPPING THE VERTICAL SET OF POMS
     move_linear(6, -2);
+    //wait_for_button()();
 
     //Slide 28
     p("Slide 28");
     half_lower_arm();
     open_claw();
-    //wait_for_button()();
-    
-    p("Waiting for the other robot.");   
 
     
     
-    move_linear(6, -9);
+    // GETTING THE PICKLES
+
+    
+    
+    move_linear(6, -8.5);
     raise_arm();
     
     close_claw();
@@ -388,27 +387,27 @@ int main()
     p("We are turning to get to the pickles"); 
    turn_around_left_wheel(-90, 0);
     
-    move_linear(6, 6.5);
+    move_linear(6, 9);
     
     turn_around_right_wheel(-90, 0);
     
     // BACK UP AND RAM INTO THE WALL
     move_linear(6, -3);
     
-    move_linear(6, 11);
+    move_linear(6, 13);
     
-    move_linear(6, -1.5);
+    move_linear(6, -1.75);
     
     
-    for(int servoPos = get_servo_position(ARM_PORT); servoPos>390; servoPos-=5){
+    for(int servoPos = get_servo_position(ARM_PORT); servoPos>450; servoPos-=3){
         set_servo_position(ARM_PORT, servoPos);
         msleep(1);
     }
+    msleep(1000);
     set_servo_position(CLAW_PORT, 1300);
     msleep(1000);
     lower_arm();
-    open_claw();
-    msleep(1000);
+    msleep(500);
     close_claw();
     raise_arm();
     
@@ -418,6 +417,7 @@ int main()
     // Move forward a bit so that we can align
     move_linear(6, 3);
     turn_around_right_wheel(-90);
+    msleep(7000);
     
    
     move_linear(6, 7.5);
@@ -426,12 +426,16 @@ int main()
 
     // Move forward towards the trays
     move_linear(6, 11);
+    move_linear(6, -2);
     
     // Drop the pickle
     half_lower_arm();
     open_claw();
 
+    move_linear(6, 2.1);
 
+    // Wait for the other robot.
+    msleep(13000);
 
 
     /* GET THE THIRD POM SET */
@@ -443,15 +447,22 @@ int main()
     // Back up away from the trays
     move_linear(6, -5.5);
 
+    
+
     // Turn towards the third pom set.
     turn_around_right_wheel(-90);
 
     // Move towards the third pom set.
-    move_linear(6, 15);
+    move_linear(6, 11);
+    
+    open_claw();
+    lower_arm();
+    
+    move_linear(6, 4);
+    move_linear(6, -2);
 
     // Grab the poms.
     open_claw();
-    lower_arm();
     close_claw();
     raise_arm();
 
@@ -461,11 +472,12 @@ int main()
     /* PUT THE LAST POM SET IN THE THIRD TRAY. */
 
     // Back up. This is moving left.
-    move_linear(6, -10);
+    move_linear(6, -8);
     
     // Turn towards the trays, then move towards them.
     turn_around_right_wheel(90);
     move_linear(6, 8.5);
+    move_linear(6, -3.5);
 
     // Drop the poms.
     half_lower_arm();
@@ -616,7 +628,6 @@ unit5:
     p("RAISING ARM");
     raise_arm();
     p("OOK");
-    
    
 	turn_around_right_wheel(-90, 0);
     move_linear(6, 7.5);
