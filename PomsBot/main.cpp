@@ -3,22 +3,45 @@
 
 const int ARM_PORT = 3;
 const int CLAW_PORT = 1;
-const int RAISED_POSITION = 1220; //FIX THE NUMBER
-const int FULLY_RAISED = 1800; 
+const int RAISED_POSITION = 1100; //FIX THE NUMBER
+const int FULLY_RAISED = 1700; 
 const int HALF_LOWERED = 487;
-const int LOWERED_POSITION = 120; //FIX THE NUMBER
-const int CLOSED_POSITION = 280; //FIX THE NUMBER
-const int OPEN_POSITION = 1931; //FIX THE NUMBER
+const int LOWERED_POSITION = 150; //FIX THE NUMBER
+const int CLOSED_POSITION = 800; //FIX THE NUMBER
+const int OPEN_POSITION = 2047; //FIX THE NUMBER
 const int LEFT_MOTOR_PIN = 3;
 const int RIGHT_MOTOR_PIN = 0;
 const double PI = 3.141592654;
 
-const double LEFT_TICKS_PER_INCH = 200;
-const double RIGHT_TICKS_PER_INCH = 230;
+
+const double LEFT_TICKS_PER_INCH = 206.7;
+const double RIGHT_TICKS_PER_INCH = 256.0;
+
+const double LEFT_TICKS_PER_INCH_BACKWARDS = 256.0;
+const double RIGHT_TICKS_PER_INCH_BACKWARDS = 240.0;
+
+
+const double ARM_DOWN_LEFT_TICKS_PER_INCH = LEFT_TICKS_PER_INCH;
+const double ARM_DOWN_RIGHT_TICKS_PER_INCH = RIGHT_TICKS_PER_INCH;
+
+const double ARM_DOWN_LEFT_TICKS_PER_INCH_BACKWARDS = LEFT_TICKS_PER_INCH_BACKWARDS;
+const double ARM_DOWN_RIGHT_TICKS_PER_INCH_BACKWARDS = RIGHT_TICKS_PER_INCH_BACKWARDS;
+
+//const double TURN_AROUND_LEFT_WHEEL_ARM_RAISED_OFFSET = -140;
+//const double TURN_AROUND_LEFT_WHEEL_ARM_LOWERED_OFFSET = -70;
+
+//const double TURN_AROUND_RIGHT_WHEEL_ARM_RAISED_OFFSET = -130;
+//const double TURN_AROUND_RIGHT_WHEEL_ARM_LOWERED_OFFSET = -140;
+
+const double TURN_AROUND_LEFT_WHEEL_ARM_RAISED_OFFSET = 0;
+const double TURN_AROUND_LEFT_WHEEL_ARM_LOWERED_OFFSET = 0;
+
+const double TURN_AROUND_RIGHT_WHEEL_ARM_RAISED_OFFSET = 0;
+const double TURN_AROUND_RIGHT_WHEEL_ARM_LOWERED_OFFSET = 0;
 
 void raise_arm()
 {
-    for(int servoPos = get_servo_position(ARM_PORT); servoPos<RAISED_POSITION; servoPos++){
+    for(int servoPos = get_servo_position(ARM_PORT); servoPos<RAISED_POSITION; servoPos+=2){
         set_servo_position(ARM_PORT, servoPos);
         msleep(1);
     }
@@ -26,7 +49,7 @@ void raise_arm()
 
 void half_lower_arm()
 {
-    for(int servoPos = get_servo_position(ARM_PORT); servoPos>HALF_LOWERED; servoPos--)
+    for(int servoPos = get_servo_position(ARM_PORT); servoPos>HALF_LOWERED; servoPos-=2)
     {
         set_servo_position(ARM_PORT, servoPos);
         msleep(1);
@@ -35,7 +58,7 @@ void half_lower_arm()
 
 void lower_arm()
 {
-    for(int servoPos = get_servo_position(ARM_PORT); servoPos>LOWERED_POSITION; servoPos--){
+    for(int servoPos = get_servo_position(ARM_PORT); servoPos>LOWERED_POSITION; servoPos-=2){
         set_servo_position(ARM_PORT, servoPos);
         msleep(1);
     }
@@ -81,10 +104,35 @@ void move_linear(double speed_inch_per_sec, double distance_inch, int wait_offse
         Try to always move at 5 inches per second
         Backwards is negative distance values. Keep speed positive.
     */
-
-    double mult = distance_inch/abs(distance_inch);    
-    move_at_velocity(LEFT_MOTOR_PIN, mult*speed_inch_per_sec*LEFT_TICKS_PER_INCH);
-    move_at_velocity(RIGHT_MOTOR_PIN, mult*speed_inch_per_sec*RIGHT_TICKS_PER_INCH);
+    
+    double mult = distance_inch/abs(distance_inch);
+    
+    // Depending on whether or not the arm is raised, use different ticks per inch values
+    if (get_servo_position(ARM_PORT) < 400) 
+    {
+        // Arm is lowered
+        if(distance_inch<0){
+            move_at_velocity(LEFT_MOTOR_PIN, mult*speed_inch_per_sec*ARM_DOWN_LEFT_TICKS_PER_INCH_BACKWARDS);
+        	move_at_velocity(RIGHT_MOTOR_PIN, mult*speed_inch_per_sec*ARM_DOWN_RIGHT_TICKS_PER_INCH_BACKWARDS);
+        }
+		else{
+        	move_at_velocity(LEFT_MOTOR_PIN, mult*speed_inch_per_sec*ARM_DOWN_LEFT_TICKS_PER_INCH);
+        	move_at_velocity(RIGHT_MOTOR_PIN, mult*speed_inch_per_sec*ARM_DOWN_RIGHT_TICKS_PER_INCH);
+        }
+    }
+    else
+    {
+        // Arm is raised
+        if(distance_inch<0){
+        	move_at_velocity(LEFT_MOTOR_PIN, mult*speed_inch_per_sec*LEFT_TICKS_PER_INCH_BACKWARDS);
+            move_at_velocity(RIGHT_MOTOR_PIN, mult*speed_inch_per_sec*RIGHT_TICKS_PER_INCH_BACKWARDS);
+        }
+        else{
+        	move_at_velocity(LEFT_MOTOR_PIN, mult*speed_inch_per_sec*LEFT_TICKS_PER_INCH);
+            move_at_velocity(RIGHT_MOTOR_PIN, mult*speed_inch_per_sec*RIGHT_TICKS_PER_INCH);
+        }
+    }
+    
     msleep(abs(distance_inch/speed_inch_per_sec*1000)+wait_offset_ms);
     stop();
 }
@@ -100,7 +148,18 @@ void turn_around_left_wheel(double degrees, int wait_offset_ms=0)
     double distance = 2*PI*6.5*(degrees/360);
     double mult = distance/abs(distance);
     move_at_velocity(RIGHT_MOTOR_PIN, mult*5*RIGHT_TICKS_PER_INCH);
-    msleep(abs(distance/5*1000)+wait_offset_ms);
+    
+    if (get_servo_position(ARM_PORT) < 400) 
+    {
+        // Arm is lowered
+       	msleep(abs(distance/5.45*1000)+TURN_AROUND_LEFT_WHEEL_ARM_LOWERED_OFFSET+wait_offset_ms);
+    }
+    else
+    {
+        // Arm is raised
+       	msleep(abs(distance/5.45*1000)+TURN_AROUND_LEFT_WHEEL_ARM_RAISED_OFFSET+wait_offset_ms);
+    }
+    
     stop();
 }
 
@@ -114,7 +173,17 @@ void turn_around_right_wheel(double degrees, int wait_offset_ms=0)
     double distance = 2*PI*6.5*(degrees/360);
     double mult = distance/abs(distance);
     move_at_velocity(LEFT_MOTOR_PIN, 5*mult*LEFT_TICKS_PER_INCH);
-    msleep(abs(distance/5*1000)+wait_offset_ms);
+    
+    if (get_servo_position(ARM_PORT) < 400) 
+    {
+        // Arm is lowered
+       	msleep(abs(distance/5.35*1000)+TURN_AROUND_RIGHT_WHEEL_ARM_LOWERED_OFFSET+wait_offset_ms);
+    }
+    else
+    {
+        // Arm is raised
+       	msleep(abs(distance/5.35*1000)+TURN_AROUND_RIGHT_WHEEL_ARM_RAISED_OFFSET+wait_offset_ms);
+    }
     stop();
 }
 
@@ -137,36 +206,49 @@ void fully_raise_arm()
 
 int main()
 {
-    // turn_around_right_wheel(90, 0);
-   // move_linear(5,50,0);
-    //return 0;
-    enable_servos();    
-	
+
+    
+    shut_down_in(119);
+
+	enable_servos();
+ 	disable_servo(0);
     
     
-    //wait_for_button();
+
+  	
+    //Calibration
+	//move_linear(6,30,0);
+    //move_linear(6, -30, 0);
+    //turn_around_left_wheel(90, 0);
+    
+    ////wait_for_button()();
     // Slide 3
     p("Slide 3");
     raise_arm();
-    turn_around_left_wheel(90, 75);
+    turn_around_left_wheel(90, 0);
+   
     
-
     // Slide 4
-    //wait_for_button();
+    ////wait_for_button()();
     p("Slide 4");
-    move_linear(5, -17, 150);
-    
+    move_linear(6, -16, 0);
+   
 
    	// Slide 5
-    //wait_for_button();
+    ////wait_for_button()();
     p("Slide 5");
-    turn_around_left_wheel(-90, 75);
+    turn_around_left_wheel(-90, 0);
     
 
     // Slide 6
-    //wait_for_button();
+    ////wait_for_button()();
     p("Slide 6");
-    move_linear(5, -14, 0);    
+    move_linear(6, -12, 0);    
+    
+    
+    p("Unit 2");
+    
+    
     
     /*
     bb    bb bbb    bb bb bbbbbbbb     bbbbbb  
@@ -184,31 +266,32 @@ int main()
     open_claw();
     lower_arm();
 
-    //wait_for_button();
+    ////wait_for_button()();
     // Slide 9
     p("Slide 9");
-    move_linear(5, 24, 0);
+    move_linear(6, 23, 0);
+    move_linear(6, -2, 0);
 
-    //wait_for_button();
+    ////wait_for_button()();
     // Slide 10
     p("Slide 10");
     close_claw();
     raise_arm();
     
-    //wait_for_button();
+    ////wait_for_button()();
     // Slide 11
     p("Slide 11");
-    move_linear(5, 9, 0);
+    move_linear(6, 7, 0);
     
-    //wait_for_button();
+    ////wait_for_button()();
     // Slide 12
     p("Slide 12");
-    turn_around_right_wheel(90, 60);
+    turn_around_right_wheel(90, 0);
     
     
     // Slide 13
 	p("Slide 13");
-    move_linear(5, 5, 0);
+    move_linear(6, 3, 0);
     
     // Slide 14
     p("Slide 14");
@@ -222,108 +305,390 @@ int main()
 
     
     
+    p("Unit 3");
+    //wait_for_button()();
     
     
     
+    // UNIT 3 
+    
+   
     //Slide 18
     p("Slide 18");
-    move_linear(5, -6);
+    move_linear(6, -3);
+    //wait_for_button()();
 
     //Slide 19
     p("Slide 19");
     turn_around_right_wheel(-90);
-    move_linear(5,-3);
-    
+    move_linear(6,-3);
+    //wait_for_button()();
     //Slide 20
     p("Slide 20");
-    move_linear(5, 3.4); // old comment: FIX THIS NUMBER
-    
+    move_linear(6, 1.5); 
+    //wait_for_button()();
 
     //Slide 21
     p("Slide 21");
     open_claw();
     lower_arm();
+    //wait_for_button()();
     
     //Slide 22
     p("Slide 22");
     turn_around_right_wheel(-30);
+    //wait_for_button()();
     
     //Slide 23
     p("Slide 23");
-    move_linear(5, 3.3);
-
+    move_linear(6, 1.5);
+//wait_for_button()();
     //Slide 24
     p("Slide 24");
-    turn_around_right_wheel(-30);
-    //move_linear(5, X); //FIX THE NUMBER
+    move_linear(6, 3);
+    turn_around_right_wheel(-15);
+    move_linear(6, -2);
+    //move_linear(6, X); //FIX THE NUMBER
     
-    move_linear(5, -1.5);
-
+    
+//wait_for_button()();
     //Slide 25
     p("Slide 25");
     close_claw();
     raise_arm();
-
-    //Slide 26
-    p("Slide 26");
-    turn_around_right_wheel(60);
-    move_linear(5,3);
-    turn_around_right_wheel(90, -50);
+//wait_for_button()();
     
+    //Slide 26
+    p("Slide 26. Turning towards the tray to drop off the vertical set of poms");
+    turn_around_right_wheel(90, 100);
+    
+    
+    //wait_for_button()();
     //Slide 27
     p("Slide 27");
-    move_linear(5, 5);
+    move_linear(6, 8); // DROPPING THE VERTICAL SET OF POMS
+    //wait_for_button()();
+    move_linear(6, -2);
 
     //Slide 28
     p("Slide 28");
     half_lower_arm();
     open_claw();
+    //wait_for_button()();
+    
+    p("Waiting for the other robot.");   
+
     
     
+    move_linear(6, -9);
+    raise_arm();
+    
+    close_claw();
+    
+    p("We are turning to get to the pickles"); 
+   turn_around_left_wheel(-90, 0);
+    
+    move_linear(6, 6.5);
+    
+    turn_around_right_wheel(-90, 0);
+    
+    // BACK UP AND RAM INTO THE WALL
+    move_linear(6, -3);
+    
+    move_linear(6, 11);
+    
+    move_linear(6, -1.5);
     
     
+    for(int servoPos = get_servo_position(ARM_PORT); servoPos>390; servoPos-=5){
+        set_servo_position(ARM_PORT, servoPos);
+        msleep(1);
+    }
+    set_servo_position(CLAW_PORT, 1300);
+    msleep(1000);
+    lower_arm();
+    open_claw();
+    msleep(1000);
+    close_claw();
+    raise_arm();
+    
+    
+    // DROP OFF THE PICKLE
+    
+    // Move forward a bit so that we can align
+    move_linear(6, 3);
+    turn_around_right_wheel(-90);
+    
+   
+    move_linear(6, 7.5);
+    
+    turn_around_left_wheel(-90);
+
+    // Move forward towards the trays
+    move_linear(6, 11);
+    
+    // Drop the pickle
+    half_lower_arm();
+    open_claw();
+
+
+
+
+    /* GET THE THIRD POM SET */
+
+    raise_arm();
+
+    close_claw();
+
+    // Back up away from the trays
+    move_linear(6, -5.5);
+
+    // Turn towards the third pom set.
+    turn_around_right_wheel(-90);
+
+    // Move towards the third pom set.
+    move_linear(6, 15);
+
+    // Grab the poms.
+    open_claw();
+    lower_arm();
+    close_claw();
+    raise_arm();
+
+
+
+
+    /* PUT THE LAST POM SET IN THE THIRD TRAY. */
+
+    // Back up. This is moving left.
+    move_linear(6, -10);
+    
+    // Turn towards the trays, then move towards them.
+    turn_around_right_wheel(90);
+    move_linear(6, 8.5);
+
+    // Drop the poms.
+    half_lower_arm();
+    open_claw();
+
+
+    
+    return 0;
+  
+    
+unit5:
+    // UNIT 5: GETTING THE PICKLE
+    
+    p("Slide 37. Move claw to 1300. This makes the claw as small as possible so it doesn't bump into anything but also wide enough to not hit the pickle.");
+    set_servo_position(CLAW_PORT, 1300);
+    msleep(1000);
+   
+    
+    p("Slide 32. Turn around right wheel -90 degrees");
+    turn_around_right_wheel(90, 0);
+    //wait_for_button();
+    
+    p("Slide 33. Back up 6 inches. This is uh towards the right side.");
+   	move_linear(5, -9);
+    //wait_for_button();
+    
+    p("Slide 34. Turn around right wheel -90 degrees so that we are facing the pickle");
+   	turn_around_right_wheel(90, 0);
+    //wait_for_button();
+    
+    p("Slide 35. Move forward until bump into wall. Then back up.");
+   	move_linear(5, 4);
+    move_linear(5, -2);
+    //wait_for_button();
+    
+    p("Slide 38. Lower arm");
+    lower_arm();
+    set_servo_position(ARM_PORT, 0);
+    msleep(500);
+    
+    p("Slide 39. Close claw. Raise arm. Back out.");
+    close_claw();
+    raise_arm();
+    move_linear(5, -5);
+    
+    p("Slide 40. Turn around -90 degrees around the right wheel");
+    turn_around_right_wheel(-90, 0);
+    
+    p("Slide 41. Move forward 4.5 inches.");
+    move_linear(5, 4.5);
+    
+    p("Slide 42. Turn around left wheel -90 degrees.");
+    turn_around_left_wheel(-90, 0);
+    
+    p("Slide 43. Move forward so that the pickle is over the trays");
+    move_linear(5, 3);
+    
+    p("Slide 44. Drop the pickle.");
+    half_lower_arm();
+    open_claw();
+    
+    // TOMATO
+    
+    p("Back up towards the tomato so that we are aligned.");
+    move_linear(6, -12);
+    
+    
+    return 0;
+    
+    
+
+    // BLOCK OF CODE THAT GRABS AND THEN PLACES THE PICKEL
+    
+  //wait_for_button();
+    raise_arm();
+     //wait_for_button();
+    close_claw();
+      // wait_for_button();
+    
+    move_linear(6, -8);
+       //wait_for_button();
+    turn_around_left_wheel(90, 0);
+      wait_for_button();
+    move_linear(6, -2.5);
+       //wait_for_button();
+    turn_around_right_wheel(90, 0);
+       //wait_for_button();
+    set_servo_position(ARM_PORT, 400);
+    msleep(1000);
+       //wait_for_button();
+	move_linear(6, 3);
+       //wait_for_button();
+    move_linear(6, -2);
+       //wait_for_button();
+    set_servo_position(CLAW_PORT, 600);
+    msleep(1000);
+       //wait_for_button();
+    lower_arm();
+       //wait_for_button();
+    close_claw();
+    
+    p("RAISING ARM");
+    raise_arm();
+    p("OOK");
+    
+   
+	turn_around_right_wheel(-90, 0);
+    move_linear(6, 7.5);
+    turn_around_left_wheel(-90, 0);
+    move_linear(6, 7.5);
+    half_lower_arm();
+    open_claw();
+    
+    // dropped pickle
+    p("dropped pickle");
+    
+    
+    // BLOCK OF CODE THAT GETS THE TOMATO
+    
+    //wait_for_button();
+    raise_arm();
+     //wait_for_button();
+    close_claw();
+      // wait_for_button();
+    
+    move_linear(6, -8);
+       //wait_for_button();
+    turn_around_left_wheel(90, 0);
+      // wait_for_button();
+    move_linear(6, -2.5);
+       //wait_for_button();
+    turn_around_right_wheel(90, 0);
+       //wait_for_button();
+    set_servo_position(ARM_PORT, 400);
+    msleep(1000);
+       //wait_for_button();
+	move_linear(6, 3);
+       //wait_for_button();
+    move_linear(6, -4);
+       //wait_for_button();
+    set_servo_position(CLAW_PORT, 600);
+    msleep(1000);
+       //wait_for_button();
+    lower_arm();
+       //wait_for_button();
+    close_claw();
+    
+    p("RAISING ARM");
+    raise_arm();
+    p("OOK");
+    
+   
+	turn_around_right_wheel(-90, 0);
+    move_linear(6, 7.5);
+    turn_around_left_wheel(-90, 0);
+    move_linear(6, 7.5);
+    half_lower_arm();
+    open_claw();
+    
+    
+    return 0;
+    
+    
+    p("unit 5");
+    // UNIT 5
+    
+    close_claw();
+    raise_arm();
+    move_linear(6, -11.3);
+    
+    turn_around_right_wheel(95,0);
+    
+    move_linear(6, 26.5);
+    turn_around_left_wheel(-180, 0);
+    
+    //wait_for_button()();
+    turn_around_right_wheel(5, 0);
+    open_claw();
+    lower_arm();
+    
+    move_linear(6, 5);
     
     /*
     
    	// UNIT 3 
     
-    wait_for_button();
+    //wait_for_button()();
     // Slide 16
     p("Slide 16");
     raise_arm();
     
-    wait_for_button();
+    //wait_for_button()();
     //Slide 17
     p("Slide 17");
-    move_linear(5, -6.5);
+    move_linear(6, -6.5);
 	
-    wait_for_button();
+    //wait_for_button()();
     //Slide 18
     p("Slide 18");
-    turn_around_right_wheel(-90, 100);
+    turn_around_right_wheel(-90, 0);
 	    
-    wait_for_button();
+    //wait_for_button()();
     //Slide 19
     p("Slide 19");
-    move_linear(5, -3);
+    move_linear(6, -3);
     
-    wait_for_button();
+    //wait_for_button()();
     // Slide 20
     p("Slide 20");
     lower_arm();
     close_claw();
     
-    wait_for_button();
+    //wait_for_button()();
     // Slide 21
     p("Slide 21");
     raise_arm();
     
-    wait_for_button();
+    //wait_for_button()();
     // Slide 22
     p("Slide 22");
-    move_linear(5, 13.75, 0);
+    move_linear(6, 13.75, 0);
     
-    wait_for_button();
+    //wait_for_button()();
     // Slide 23
     p("Slide 23");
     turn_around_right_wheel(-90, 0);
@@ -332,12 +697,12 @@ int main()
     
     return 0;
     
-    wait_for_button();
+    //wait_for_button()();
     // Slide 20
     p("Slide 20");
     lower_arm();
     
-    wait_for_button();
+    //wait_for_button()();
     // Slide 21
     p("Slide 21");
     
@@ -347,7 +712,7 @@ int main()
     
     //Slide 20
     p("Slide 20");
-    move_linear(5, X); //FIX THE NUMBER
+    move_linear(6, X); //FIX THE NUMBER
 
     //Slide 21
     p("Slide 21");
@@ -363,7 +728,7 @@ int main()
 
     //Slide 24
     p("Slide 24");
-    move_linear(5, X); //FIX THE NUMBER
+    move_linear(6, X); //FIX THE NUMBER
 
     //Slide 25
     p("Slide 25");
@@ -371,13 +736,13 @@ int main()
 
     //Slide 26
     p("Slide 26");
-    move_linear(5, X); //FIX THE NUMBER
+    move_linear(6, X); //FIX THE NUMBER
     lower_arm();
     
     //Slide 27
     p("Slide 27");
     open_claw();
-    
+   
 */
     
 }
